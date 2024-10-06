@@ -1,6 +1,6 @@
 # Move AWS S3 Tagged object
 
-These Lambda functions will move tagged objects from one bucket to another. So if one day you need to automatically detected when an object gets tagged and perform a move operation (copy and then delete) these lambda might do the trick.
+These Lambda functions facilitate the transfer of tagged objects between buckets. If you ever require an automated solution to detect when an object is tagged and subsequently perform a move operation (copying it and then deleting the original), these Lambda functions are designed to handle that task efficiently.
 
 
 ## Requirements
@@ -11,9 +11,9 @@ These Lambda functions will move tagged objects from one bucket to another. So i
 
 ## A bit of history and explanation
 
-I was given a mission (jira ticket) to figure a way to safely remove tagged objects for example with the tag `LifeCycle=Delete` from a very critical s3 bucket. Our goal is to move the desired objects to a secondary bucket which will then be wiped later after a certain amount of days as a safeguard in case we need to restore the objects back. This doesn't sound to complicated right? well the thing is that this bucket currently has millions of critical objects and there isn't lifecycle rule that can do the trick. 
+I was assigned a mission (Jira ticket) to develop a method for safely removing tagged objects, such as those labeled with the tag `LifeCycle=Delete`, from a critical S3 bucket. The objective is to transfer these objects to a secondary bucket, where they will be retained for a specified period as a precautionary measure in case restoration is needed. At first glance, this task may not seem too complex; however, the challenge arises from the fact that this bucket contains millions of critical objects, and there are no lifecycle rules that can address the situation.
 
-I came up with two lambda functions to solve this in two different scenarios.
+To tackle this issue, I designed two Lambda functions to handle the task in two different scenarios.
 
 ### [Scenario 1] Triggered by EventBridge
 
@@ -23,7 +23,7 @@ In this scenario the origin bucket (the bucket with the million of objects) will
 
 ### [Scenario 2] Triggered by S3 Batch Operation
 
-But what happens with the existing tagged objects? Well at first I was trying to just do a list objects operation but then I rapidly figured that this is a linear time complexity operation and for a million objects will take days or months.
+What about the existing tagged objects? Initially, I attempted to perform a simple list objects operation; however, I quickly realized that this approach has linear time complexity. When dealing with a million objects, this method could take days or even months to complete.
 
 ![image](img/s3batchTriggered.png)
 
